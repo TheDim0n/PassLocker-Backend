@@ -7,10 +7,10 @@ class Settings(BaseSettings):
 
     # main app settings
     debug: bool = False
-    secret_key: int
+    secret_key: str
     default_user_login: str
     default_user_password: str
-    access_token_expire_minutes: int
+    access_token_expires_minutes: int
 
     # proxy settings
     root_path: str = ''

@@ -3,9 +3,12 @@ import importlib
 from importlib import resources
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
-from app.database.database import SessionLocal
+from app.database import crud, schemas
+from app.database.database import engine, SessionLocal
 from app.dependencies import get_settings
+from app.utils import password as passwd
 
 
 settings = get_settings()
@@ -39,3 +42,18 @@ async def db_session_middleware(request: Request, call_next):
     finally:
         request.state.db.close()
     return response
+
+
+@app.on_event("startup")
+async def on_startup():
+    with Session(engine) as db:
+        user_db = crud.get_user_by_login(db=db,
+                                         login=settings.default_user_login)
+        if not user_db:
+            new_user = schemas.UserCreate(
+                login=settings.default_user_login,
+                password=settings.default_user_password
+            )
+            new_user.password = passwd.hash(new_user.password)
+            _ = crud.create_user(db=db, new_user=new_user)
+    return

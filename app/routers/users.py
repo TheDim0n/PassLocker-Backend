@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 from typing import List
 
 from ..utils import auth
+from ..utils import password as passwd
 from ..database import crud, schemas
 from ..dependencies import get_db
 
@@ -11,6 +13,19 @@ router = APIRouter(
     prefix="/users",
     tags=["Users"]
 )
+
+
+@router.post("/", status_code=201, summary="Create new user account")
+async def create_user(
+    new_user: schemas.UserCreate,
+    db: Session = Depends(get_db)
+):
+    user_db = crud.get_user_by_login(db=db, login=new_user.login)
+    if user_db:
+        return HTTPException(status_code=409, detail="User already exists")
+    new_user.password = passwd.hash(new_user.password)
+    _ = crud.create_user(db=db, new_user=new_user)
+    return Response(status_code=201)
 
 
 @router.post("/token/", response_model=schemas.Token,
