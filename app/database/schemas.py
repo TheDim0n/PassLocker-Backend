@@ -1,16 +1,26 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
-class MessageBase(BaseModel):
-    message: str
+class UserBase(BaseModel):
+    login: str
 
 
-class MessageCreate(MessageBase):
-    pass
+class UserCreate(UserBase):
+    password: str
 
 
-class MessageDB(MessageBase):
+class UserDB(UserBase):
     id: int
 
     class Config:
         orm_mode = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None

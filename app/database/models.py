@@ -1,10 +1,19 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, ForeignKey, String
 
 from .database import DataBase
 
 
-class Message(DataBase):
-    __tablename__ = "message"
+class User(DataBase):
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
-    message = Column(String(), nullable=False)
+    login = Column(String(), nullable=False, unique=True)
+    password = Column(String(), nullable=False)
+
+
+class Secret(DataBase):
+    __tablename__ = "secret"
+
+    id = Column(Integer, primary_key=True)
+    secret = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)

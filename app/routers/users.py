@@ -1,0 +1,31 @@
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from typing import List
+
+from ..utils import auth
+from ..database import crud, schemas
+from ..dependencies import get_db
+
+
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"]
+)
+
+
+@router.post("/token/", response_model=schemas.Token,
+             summary="Get access token for user")
+async def get_user_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    user_db = auth.authenticate_user(db=db, username=form_data.username,
+                                     password=form_data.password)
+    if not user_db:
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = auth.create_user_access_token({"sub": user_db.login})
+    return {"access_token": access_token, "token_type": "bearer"}
