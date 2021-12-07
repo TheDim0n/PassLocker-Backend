@@ -13,7 +13,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: ''
+      DATABASE_URL: 'sqlite:///./sql_app.db'
       DEBUG: 1
       SECRET_KEY: 'test_secret'
       DEFAULT_USER_LOGIN: user
