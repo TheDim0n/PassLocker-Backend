@@ -1,4 +1,5 @@
 # PassLocker-Backend
 Backend for PassLocker project.
 
-![example workflow](https://github.com/TheDim0n/PassLocker-Backend/actions/workflows/tests.yml/badge.svg)
+[![tests](https://github.com/TheDim0n/PassLocker-Backend/actions/workflows/tests.yml/badge.svg)](https://github.com/TheDim0n/PassLocker-Backend/actions/workflows/tests.yml)
+[![CI](https://github.com/TheDim0n/PassLocker-Backend/actions/workflows/ci.yml/badge.svg)](https://github.com/TheDim0n/PassLocker-Backend/actions/workflows/ci.yml)
