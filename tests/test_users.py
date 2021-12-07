@@ -32,27 +32,23 @@ client = TestClient(app, base_url="http://localhost")
 test_message = {"message": "test message"}
 
 
-def test_create_message():
-    response = client.post("/messages/", json=test_message)
+def get_user_token(login: str, password: str):
+    payload = f"password={password}&username={login}"
+    response = client.post(
+        '/users/token/', data=payload,
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    return response.json()
+
+
+def test_create_new_user():
+    response = client.post("/users/", json={
+        "login": "test_user",
+        "password": "test_password"
+    })
     assert response.status_code == 201
 
 
-def test_read_created_message():
-    response = client.get("/messages/")
-    assert response.status_code == 200
-    assert response.json()[-1]["message"] == test_message["message"]
-
-
-def test_delete_message():
-    response = client.get("/messages/")
-    assert response.status_code == 200
-
-    id = response.json()[0]["id"]
-    response = client.delete(f"/messages/{id}/")
-    assert response.status_code == 204
-
-
-def test_read_messages_after_delete():
-    response = client.get("/messages/")
-    assert response.status_code == 200
-    assert len(response.json()) == 0
+def test_get_user_token():
+    data = get_user_token("test_user", "test_password")
+    assert "access_token" in data
