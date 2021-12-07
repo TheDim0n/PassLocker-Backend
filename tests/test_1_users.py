@@ -3,9 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.database.database import DataBase
-from app.dependencies import get_db
+from app.dependencies import get_db, get_settings
 from app.main import app
 
+
+settings = get_settings()
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 
@@ -43,12 +45,23 @@ def get_user_token(login: str, password: str):
 
 def test_create_new_user():
     response = client.post("/users/", json={
-        "login": "test_user",
-        "password": "test_password"
+        "login": settings.default_user_login,
+        "password": settings.default_user_password
     })
     assert response.status_code == 201
 
 
 def test_get_user_token():
-    data = get_user_token("test_user", "test_password")
+    data = get_user_token(
+        settings.default_user_login,
+        settings.default_user_password
+    )
     assert "access_token" in data
+
+
+def test_create_existing_user():
+    response = client.post("/users/", json={
+        "login": settings.default_user_login,
+        "password": settings.default_user_password
+    })
+    assert response.status_code == 409
