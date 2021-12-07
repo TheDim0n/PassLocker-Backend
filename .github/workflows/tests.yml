@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches:    
+    branches:
       - 'develop'
     paths-ignore:
       - 'README.md'
@@ -12,6 +12,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ''
+      DEBUG: 1
+      SECRET_KEY: 'test_secret'
+      DEFAULT_USER_LOGIN: user
+      DEFAULT_USER_PASSWORD: password
+      ACCESS_TOKEN_EXPIRES_MINUTES: 10
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.9
