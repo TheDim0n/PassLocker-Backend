@@ -54,4 +54,4 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.REMOTE_PASSWORD }}
-          script: docker service update passlocker_backend --with-registry-auth
+          script: docker service update --image ghcr.io/thedim0n/passlocker/backend passlocker_backend --with-registry-auth
