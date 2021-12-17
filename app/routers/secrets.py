@@ -31,8 +31,8 @@ async def create_secret(
 ):
     user_id = crud.get_user_by_login(db=db, login=current_user.login).id
     _ = crud.create_secret(db=db, new_secret=schemas.SecretCreate(
-        secret=new_secret.secret,
-        user_id=user_id
+        user_id=user_id,
+        **new_secret.dict()
     ))
     return Response(status_code=201)
 

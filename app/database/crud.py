@@ -34,8 +34,11 @@ def create_secret(db: Session, new_secret: schemas.SecretCreate):
 
 
 def get_user_secrets(db: Session, user_id: int):
-    return db.query(models.Secret.id, models.Secret.secret).filter(
-        models.Secret.user_id == user_id).all()
+    return db.query(
+        models.Secret.id,
+        models.Secret.name,
+        models.Secret.secret
+    ).filter_by(user_id=user_id).all()
 
 
 def delete_secret_by_id(db: Session, id: int):

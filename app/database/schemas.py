@@ -33,6 +33,7 @@ class TokenData(BaseModel):
 
 # region Secret
 class SecretBase(BaseModel):
+    name: str
     secret: str
 
 
