@@ -52,6 +52,7 @@ def test_create_new_secret():
 
     headers = {"Authorization": f"Bearer {access_token}"}
     response = client.post("/secrets/", headers=headers, json={
+        "name": "test_name",
         "secret": "test_secret"
     })
     assert response.status_code == 201
